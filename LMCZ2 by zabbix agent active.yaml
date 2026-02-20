@@ -1,0 +1,236 @@
+zabbix_export:
+  version: '7.0'
+  template_groups:
+    - uuid: a571c0d144b14fd4a87a9d9b2aa9fcd6
+      name: Templates/Applications
+  templates:
+    - uuid: deb8bcc7a2624ddca7ec5c1a5b893565
+      template: 'LMCZv2 by zabbix agent active'
+      name: 'LMCZv2 by zabbix agent active'
+      description: 'Шаблон для проверки состояния веб сервера ЛМЧЗ v2'
+      groups:
+        - name: Templates/Applications
+      items:
+        - uuid: 48a5a026ae124f6cb0918fe1e2fb0342
+          name: 'Состояние репликации blocked_cis'
+          type: DEPENDENT
+          key: lmcz-v2.dbState.blocked_cis.docCount
+          delay: '0'
+          trends: '0'
+          status: DISABLED
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.dbState.blocked_cis.docCount
+          master_item:
+            key: lmcz-v2.getStatus
+          tags:
+            - tag: ЛМЧЗ
+        - uuid: 5fa462c49227408bbdc7eea0f0852a91
+          name: 'Состояние репликации blocked_gtin'
+          type: DEPENDENT
+          key: lmcz-v2.dbState.blocked_gtin.docCount
+          delay: '0'
+          trends: '0'
+          status: DISABLED
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.dbState.blocked_gtin.docCount
+          master_item:
+            key: lmcz-v2.getStatus
+          tags:
+            - tag: ЛМЧЗ
+        - uuid: e384a2aea8564a41a524b96109e99ece
+          name: 'Состояние репликации min_price'
+          type: DEPENDENT
+          key: lmcz-v2.dbState.min_price.docCount
+          delay: '0'
+          trends: '0'
+          status: DISABLED
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.dbState.min_price.docCount
+          master_item:
+            key: lmcz-v2.getStatus
+          tags:
+            - tag: ЛМЧЗ
+        - uuid: 1d9fbbc6ca7648f8811aa3cdc316069c
+          name: 'Версия базы данных «чёрного списка»'
+          type: DEPENDENT
+          key: lmcz-v2.dbVersion
+          delay: '0'
+          value_type: CHAR
+          trends: '0'
+          status: DISABLED
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.dbVersion
+          master_item:
+            key: lmcz-v2.getStatus
+          tags:
+            - tag: ЛМЧЗ
+        - uuid: c060e39423c143cd8455c959f49a96f7
+          name: 'Данные /api/v2/status'
+          type: ZABBIX_ACTIVE
+          key: lmcz-v2.getStatus
+          delay: 1h
+          value_type: TEXT
+          trends: '0'
+          timeout: 60s
+          tags:
+            - tag: ЛМЧЗ
+        - uuid: 8d6673276e5245efae4b8a3046e06abb
+          name: 'ИНН участника оборота'
+          type: DEPENDENT
+          key: lmcz-v2.inn
+          delay: '0'
+          trends: '0'
+          status: DISABLED
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.inn
+          master_item:
+            key: lmcz-v2.getStatus
+          tags:
+            - tag: ЛМЧЗ
+        - uuid: 863fe37636fc4ff8948af3438943921b
+          name: 'Идентификатор экземпляра СПО «Локальный модуль «Честный ЗНАК»'
+          type: DEPENDENT
+          key: lmcz-v2.inst
+          delay: '0'
+          value_type: CHAR
+          trends: '0'
+          status: DISABLED
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.inst
+          master_item:
+            key: lmcz-v2.getStatus
+          tags:
+            - tag: ЛМЧЗ
+        - uuid: 5d978c9801bf488792417456fdc0c0bd
+          name: 'Дата и время последней синхронизации'
+          type: DEPENDENT
+          key: lmcz-v2.lastSync
+          delay: '0'
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.lastSync
+          master_item:
+            key: lmcz-v2.getStatus
+          tags:
+            - tag: ЛМЧЗ
+          triggers:
+            - uuid: f4aaedb813ab49b0ba6c65c995ae8dd6
+              expression: 'last(/LMCZv2 by zabbix agent active/lmcz-v2.lastSync)<(now()-86400)'
+              name: '[ЛМЧЗ] Данные не синхронизировались более 1 суток'
+              priority: WARNING
+        - uuid: 5965357e946b4c34be9369ee95b08c24
+          name: 'Последнее известное время запуска одной из действующих репликаций'
+          type: DEPENDENT
+          key: lmcz-v2.lastUpdate
+          delay: '0'
+          trends: '0'
+          status: DISABLED
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.lastUpdate
+          master_item:
+            key: lmcz-v2.getStatus
+          tags:
+            - tag: ЛМЧЗ
+        - uuid: 6c821d784e704a48b5af29b1459296fc
+          name: 'Наименование программного обеспечения'
+          type: DEPENDENT
+          key: lmcz-v2.name
+          delay: '0'
+          value_type: CHAR
+          trends: '0'
+          status: DISABLED
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.name
+          master_item:
+            key: lmcz-v2.getStatus
+          tags:
+            - tag: ЛМЧЗ
+        - uuid: 95dd74e38cf34d37892119378130bc14
+          name: 'Тип режима обслуживания'
+          type: DEPENDENT
+          key: lmcz-v2.operationMode
+          delay: '0'
+          value_type: CHAR
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.operationMode
+          master_item:
+            key: lmcz-v2.getStatus
+          tags:
+            - tag: ЛМЧЗ
+          triggers:
+            - uuid: 074c16efa0ed49f5a8aa23d86ea9b6f4
+              expression: 'last(/LMCZv2 by zabbix agent active/lmcz-v2.operationMode)="service"'
+              name: '[ЛМЧЗ] Некорректный тип режима обслуживания ({ITEM.LASTVALUE})'
+              priority: AVERAGE
+        - uuid: 7dda873d0e794bafa8d87423035e8c9a
+          name: 'Адрес сервиса (бэкенда)'
+          type: DEPENDENT
+          key: lmcz-v2.serviceUrl
+          delay: '0'
+          value_type: CHAR
+          trends: '0'
+          status: DISABLED
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.serviceUrl
+          master_item:
+            key: lmcz-v2.getStatus
+          tags:
+            - tag: ЛМЧЗ
+        - uuid: 70ae769f449f417d82b6a192c79b01b8
+          name: 'Статус СПО «Локальный модуль «Честный ЗНАК»'
+          type: DEPENDENT
+          key: lmcz-v2.status
+          delay: '0'
+          value_type: CHAR
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.status
+          master_item:
+            key: lmcz-v2.getStatus
+          tags:
+            - tag: ЛМЧЗ
+          triggers:
+            - uuid: 277e6d66d7a5420b931edcc7230a9183
+              expression: 'last(/LMCZv2 by zabbix agent active/lmcz-v2.status)<>"ready"'
+              name: '[ЛМЧЗ] Некорректный статус ({ITEM.LASTVALUE})'
+              priority: HIGH
+        - uuid: 8843075deb364a1faa58c5a021b166ed
+          name: 'Версия СПО «Локальный модуль «Честный ЗНАК»'
+          type: DEPENDENT
+          key: lmcz-v2.version
+          delay: '0'
+          value_type: CHAR
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.version
+          master_item:
+            key: lmcz-v2.getStatus
+          tags:
+            - tag: ЛМЧЗ
